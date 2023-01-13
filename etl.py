@@ -6,6 +6,15 @@ from sql_queries import *
 
 
 def process_song_file(cur, filepath):
+    """
+    1. This procedure processes a song file whose filepath has been provided as an arugment.
+    2. It extracts the song information in order to store it into the songs table.
+    3. Then it extracts the artist information in order to store it into the artists table.
+
+    INPUTS: 
+    * cur: the cursor variable
+    * filepath: the file path to the song file
+    """
     # open song file
     df = pd.read_json(filepath, lines=True)
 
@@ -19,6 +28,19 @@ def process_song_file(cur, filepath):
 
 
 def process_log_file(cur, filepath):
+    """
+    1. This procedure processes a log file whose filepath has been provided as an arugment.
+    2. It filters data with "NextSong" Action.
+    3. Secondly, It transforms `ts` column from milliseconds to datetime format.
+    4. Then it extracts the time information in order to store it into the time table.
+    5. After that, it extracts the user information in order to store it into the users table.
+    6. Next, it gets song_id and artist_id for songplays table.
+    7. Finally, it extracts the songplay information in order to store it into the songplays table.
+
+    INPUTS: 
+    * cur: the cursor variable
+    * filepath: the file path to the log file
+    """
     # open log file
     df = pd.read_json(filepath, lines=True)
 
@@ -56,13 +78,25 @@ def process_log_file(cur, filepath):
             songid, artistid = None, None
 
         # insert songplay record
-        songplay_data = df[["ts", "userId", "level"]].values.tolist()[0] + \
-                    [songid, artistid] + \
-                    df[["sessionId", "location", "userAgent"]].values.tolist()[0] 
+        songplay_data = time_df[["start_time"]].values.tolist()[0] +\
+        df[["userId", "level"]].values.tolist()[0] + \
+        [songid, artistid] + \
+        df[["sessionId", "location", "userAgent"]].values.tolist()[0] 
         cur.execute(songplay_table_insert, songplay_data)
 
 
 def process_data(cur, conn, filepath, func):
+    """
+    1. This procedure gets all files matching an extension whose filepath has been provided as an arugment.
+    2. It gets the total number of files found in the filepath.
+    3. Then it iterates over these files and process them with the function that has been provided as an arugment.
+
+    INPUTS: 
+    * cur: the cursor variable
+    * conn: the connection variable
+    * filepath: the file path to the files
+    * func: the function used for processing
+    """
     # get all files matching extension from directory
     all_files = []
     for root, dirs, files in os.walk(filepath):
@@ -82,6 +116,11 @@ def process_data(cur, conn, filepath, func):
 
 
 def main():
+    """
+    This procedure connects to database.
+    It processes the files needed.
+    Then it closes the connection.
+    """
     conn = psycopg2.connect("host=127.0.0.1 dbname=sparkifydb user=student password=student")
     cur = conn.cursor()
 
