@@ -17,6 +17,7 @@ To run the Python scripts, you will need to have Python and Postgres installed o
 3. `sql_queries.py`: This script contains the SQL queries used in the `create_tables.py` and `etl.py` scripts.
 4. `data/`: This directory in `data.zip` contains the JSON logs and song data files that are used as input for the ETL pipeline.
 5. `test.ipynb`: Jupyter notebook that contains test case to check if the data is loaded into tables correctly.
+6. `ERD.py`: This script creates the ERD for the `sparkifydb` database.
 
 ## Database Schema Design and ETL Pipeline
 
@@ -24,3 +25,8 @@ To run the Python scripts, you will need to have Python and Postgres installed o
 
 * The ETL pipeline extracts data from the JSON logs and song data files, transforms the data (such as converting timestamps to a more usable format), and loads it into the appropriate tables in the `sparkifydb` database. The pipeline is designed to be flexible and able to handle new data being added to the input files without disrupting the existing data in the database.
 
+## Entity Relationship Diagram
+ 
+ <p align="left">
+<img src="https://github.com/Marcoc51/Sparkify-Data-Modeling-with-Postgres/blob/main/sparkifydb_erd.png" style="height: 500px; width:750px;"/>
+</p>
